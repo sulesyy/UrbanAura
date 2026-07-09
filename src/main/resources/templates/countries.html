@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ülkeler - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/ui-effects.js" defer></script>
+    <script src="/js/country-actions.js" defer></script>
+</head>
+<body class="page-body countries-body">
+
+<header class="navbar page-navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/countries" class="active">Ülkeler</a>
+        <a href="/lifestyles">Yaşam Tarzları</a>
+        <a href="/discover">Keşfet</a>
+        <a href="/favorites">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions" th:if="${currentUser == null}">
+        <a class="login-btn" href="/login">Giriş Yap</a>
+        <a class="register-btn" href="/register">Kayıt Ol</a>
+    </div>
+    <div class="nav-actions" th:if="${currentUser != null}">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="register-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main class="countries-page">
+    <section class="page-heading">
+        <span>COUNTRY GUIDE</span>
+        <h1>Ülkeler</h1>
+        <p>Yaşam tarzına, kültür zevkine ve hayalindeki atmosfere göre ülkeleri keşfet.</p>
+    </section>
+
+    <section class="filter-bar" aria-label="Ülke filtreleri">
+        <div class="search-field">
+            <span>⌕</span>
+            <input type="text" placeholder="Ülke ara..." data-country-search>
+        </div>
+
+        <select data-country-region>
+            <option value="">Bölge Seç</option>
+            <option>Avrupa</option>
+            <option>Asya</option>
+            <option>Amerika</option>
+            <option>Orta Doğu</option>
+            <option>Okyanusya</option>
+        </select>
+
+        <select data-country-style>
+            <option value="">Yaşam tarzı</option>
+            <option value="lüks">Lüks yaşam</option>
+            <option value="kültür">Kültür</option>
+            <option value="doğa">Doğa</option>
+            <option value="modern">Modern</option>
+        </select>
+
+        <button type="button" data-country-reset>Temizle</button>
+    </section>
+
+    <div class="country-tools-row">
+        <div class="filter-summary" data-filter-summary>16 ülke gösteriliyor</div>
+        <button class="compare-start-btn" type="button" data-compare-start>Ülkeleri Karşılaştır</button>
+    </div>
+
+    <section class="country-grid" data-country-grid>
+        <a class="country-card france" href="/country/france" data-name="fransa" data-region="avrupa" data-style="lüks kültür">
+            <button type="button" data-favorite-toggle="france" th:classappend="${favoriteSlugs.contains('france')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('france')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('france')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Fransa</h2>
+                <p>Sanat, moda ve zarafet</p>
+            </div>
+        </a>
+
+        <a class="country-card usa" href="/country/usa" data-name="abd" data-region="amerika" data-style="modern">
+            <button type="button" data-favorite-toggle="usa" th:classappend="${favoriteSlugs.contains('usa')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('usa')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('usa')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>ABD</h2>
+                <p>Modern, hızlı ve dinamik</p>
+            </div>
+        </a>
+
+        <a class="country-card uk" href="/country/uk" data-name="ingiltere" data-region="avrupa" data-style="kültür">
+            <button type="button" data-favorite-toggle="uk" th:classappend="${favoriteSlugs.contains('uk')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('uk')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('uk')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>İngiltere</h2>
+                <p>Tarih, kültür ve prestij</p>
+            </div>
+        </a>
+
+        <a class="country-card uae" href="/country/uae" data-name="bae" data-region="orta doğu" data-style="lüks modern">
+            <button type="button" data-favorite-toggle="uae" th:classappend="${favoriteSlugs.contains('uae')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('uae')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('uae')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>BAE</h2>
+                <p>Lüks, mimari ve konfor</p>
+            </div>
+        </a>
+
+        <a class="country-card japan" href="/country/japan" data-name="japonya" data-region="asya" data-style="modern kültür">
+            <button type="button" data-favorite-toggle="japan" th:classappend="${favoriteSlugs.contains('japan')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('japan')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('japan')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Japonya</h2>
+                <p>Teknoloji ve gelenek</p>
+            </div>
+        </a>
+
+        <a class="country-card italy" href="/country/italy" data-name="italya" data-region="avrupa" data-style="kültür">
+            <button type="button" data-favorite-toggle="italy" th:classappend="${favoriteSlugs.contains('italy')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('italy')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('italy')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>İtalya</h2>
+                <p>Lezzet, sanat ve tarih</p>
+            </div>
+        </a>
+
+        <a class="country-card spain" href="/country/spain" data-name="ispanya" data-region="avrupa" data-style="kültür">
+            <button type="button" data-favorite-toggle="spain" th:classappend="${favoriteSlugs.contains('spain')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('spain')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('spain')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>İspanya</h2>
+                <p>Sıcak, sosyal ve renkli</p>
+            </div>
+        </a>
+
+        <a class="country-card netherlands" href="/country/netherlands" data-name="hollanda" data-region="avrupa" data-style="modern">
+            <button type="button" data-favorite-toggle="netherlands" th:classappend="${favoriteSlugs.contains('netherlands')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('netherlands')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('netherlands')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Hollanda</h2>
+                <p>Sade, modern ve özgür</p>
+            </div>
+        </a>
+
+        <a class="country-card switzerland" href="/country/switzerland" data-name="isviçre" data-region="avrupa" data-style="doğa lüks">
+            <button type="button" data-favorite-toggle="switzerland" th:classappend="${favoriteSlugs.contains('switzerland')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('switzerland')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('switzerland')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>İsviçre</h2>
+                <p>Doğa, huzur ve kalite</p>
+            </div>
+        </a>
+
+        <a class="country-card greece" href="/country/greece" data-name="yunanistan" data-region="avrupa" data-style="doğa kültür">
+            <button type="button" data-favorite-toggle="greece" th:classappend="${favoriteSlugs.contains('greece')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('greece')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('greece')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Yunanistan</h2>
+                <p>Deniz, tarih ve sakinlik</p>
+            </div>
+        </a>
+
+        <a class="country-card canada" href="/country/canada" data-name="kanada" data-region="amerika" data-style="doğa">
+            <button type="button" data-favorite-toggle="canada" th:classappend="${favoriteSlugs.contains('canada')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('canada')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('canada')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Kanada</h2>
+                <p>Doğa, güven ve ferahlık</p>
+            </div>
+        </a>
+
+        <a class="country-card korea" href="/country/korea" data-name="güney kore" data-region="asya" data-style="modern">
+            <button type="button" data-favorite-toggle="korea" th:classappend="${favoriteSlugs.contains('korea')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('korea')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('korea')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Güney Kore</h2>
+                <p>Teknoloji, kültür ve enerji</p>
+            </div>
+        </a>
+
+        <a class="country-card australia" href="/country/australia" data-name="avustralya" data-region="okyanusya" data-style="doğa modern">
+            <button type="button" data-favorite-toggle="australia" th:classappend="${favoriteSlugs.contains('australia')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('australia')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('australia')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Avustralya</h2>
+                <p>Sahil, modern yaşam ve özgürlük</p>
+            </div>
+        </a>
+
+        <a class="country-card turkey" href="/country/turkey" data-name="türkiye" data-region="avrupa asya" data-style="kültür">
+            <button type="button" data-favorite-toggle="turkey" th:classappend="${favoriteSlugs.contains('turkey')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('turkey')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('turkey')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Türkiye</h2>
+                <p>Kültür, tarih ve sıcak yaşam</p>
+            </div>
+        </a>
+
+        <a class="country-card germany" href="/country/germany" data-name="almanya" data-region="avrupa" data-style="modern">
+            <button type="button" data-favorite-toggle="germany" th:classappend="${favoriteSlugs.contains('germany')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('germany')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('germany')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Almanya</h2>
+                <p>Düzen, kariyer ve modernlik</p>
+            </div>
+        </a>
+
+        <a class="country-card portugal" href="/country/portugal" data-name="portekiz" data-region="avrupa" data-style="doğa">
+            <button type="button" data-favorite-toggle="portugal" th:classappend="${favoriteSlugs.contains('portugal')} ? ' is-favorite'" th:attr="aria-pressed=${favoriteSlugs.contains('portugal')}" aria-label="Favorilere ekle" th:text="${favoriteSlugs.contains('portugal')} ? '♥' : '♡'">♡</button>
+            <div>
+                <h2>Portekiz</h2>
+                <p>Okyanus, huzur ve sıcaklık</p>
+            </div>
+        </a>
+    </section>
+
+    <aside class="compare-tray" data-compare-tray hidden>
+        <div class="compare-tray-header">
+            <div>
+                <span>COUNTRY COMPARE</span>
+                <strong data-compare-count>0 ülke seçildi</strong>
+            </div>
+            <div class="compare-actions">
+                <button type="button" data-compare-run>Sonucu Göster</button>
+                <button type="button" data-compare-clear>Temizle</button>
+            </div>
+        </div>
+        <div class="compare-grid" data-compare-grid></div>
+        <div class="compare-result" data-compare-result hidden></div>
+    </aside>
+</main>
+
+</body>
+</html>

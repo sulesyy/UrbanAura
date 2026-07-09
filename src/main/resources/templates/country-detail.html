@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${country.name} + ' - UrbanAura'">Ülke - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/country-actions.js" defer></script>
+    <script src="/js/ui-effects.js" defer></script>
+</head>
+<body class="page-body country-detail-body">
+
+<header class="navbar page-navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/countries" class="active">Ülkeler</a>
+        <a href="/lifestyles">Yaşam Tarzları</a>
+        <a href="/discover">Keşfet</a>
+        <a href="/favorites">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions" th:if="${currentUser == null}">
+        <a class="login-btn" href="/login">Giriş Yap</a>
+        <a class="register-btn" href="/register">Kayıt Ol</a>
+    </div>
+    <div class="nav-actions" th:if="${currentUser != null}">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="register-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main class="detail-page">
+    <section class="detail-hero">
+        <div class="detail-copy">
+            <a class="breadcrumb" href="/countries">Ülkeler</a>
+            <span th:text="${country.region}">Avrupa</span>
+            <h1 th:text="${country.name}">Fransa</h1>
+            <p th:text="${country.description}">Ülke açıklaması</p>
+
+            <div class="detail-actions">
+                <button type="button" th:attr="data-favorite-toggle=${country.slug},aria-pressed=${isFavorite}"
+                        th:classappend="${isFavorite} ? ' is-favorite'">
+                    <span data-favorite-icon th:text="${isFavorite} ? '♥' : '♡'">♡</span>
+                    <span data-favorite-label th:text="${isFavorite} ? 'Favorilerde' : 'Favorilere Ekle'">Favorilere Ekle</span>
+                </button>
+                <a href="/discover">Benzer Öneriler</a>
+            </div>
+        </div>
+
+        <div th:class="'detail-image ' + ${country.imageClass}"></div>
+    </section>
+
+    <section class="info-strip">
+        <article>
+            <span>Bölge</span>
+            <strong th:text="${country.region}">Avrupa</strong>
+        </article>
+        <article>
+            <span>Yaşam Tarzı</span>
+            <strong th:text="${country.lifestyle}">Lüks & Kültür</strong>
+        </article>
+        <article>
+            <span>Öne Çıkan</span>
+            <strong th:text="${country.highlight}">Paris</strong>
+        </article>
+        <article>
+            <span>Para Birimi</span>
+            <strong th:text="${country.currency}">Euro</strong>
+        </article>
+    </section>
+
+    <section class="country-score-section">
+        <div class="section-title">
+            <span>URBANAURA SCORE</span>
+            <h2 th:text="${country.name} + ' puan kartı'">Fransa puan kartı</h2>
+        </div>
+        <div class="score-grid">
+            <article th:each="metric : ${scoreMetrics}" class="score-card">
+                <div>
+                    <span th:text="${metric.label}">Lüks</span>
+                    <strong th:text="${metric.value} + '/100'">92/100</strong>
+                </div>
+                <div class="score-line" th:style="'--score:' + ${metric.value} + '%'">
+                    <span></span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="detail-insight-grid">
+        <article>
+            <span>NEDEN UYGUN?</span>
+            <h2 th:text="${country.name} + ' sana ne sunar?'">Fransa sana ne sunar?</h2>
+            <ul>
+                <li th:each="reason : ${matchReasons}" th:text="${reason}">Yaşam ritmini yansıtır.</li>
+            </ul>
+        </article>
+        <article>
+            <span>HIZLI BAKIŞ</span>
+            <h2>Pratik Bilgiler</h2>
+            <ul>
+                <li th:each="note : ${practicalNotes}" th:text="${note}">Para birimi: Euro</li>
+            </ul>
+        </article>
+    </section>
+
+    <section class="related-country-section" th:if="${!relatedCountries.isEmpty()}">
+        <div class="section-title">
+            <span>BENZER ROTALAR</span>
+            <h2>Bu ülkeye yakın hissedenler bunları da sevdi</h2>
+        </div>
+        <div class="related-country-grid">
+            <a th:each="related : ${relatedCountries}" th:href="'/country/' + ${related.slug}" th:class="'country-card ' + ${related.imageClass}">
+                <div>
+                    <h2 th:text="${related.name}">İtalya</h2>
+                    <p th:text="${related.lifestyle}">Sanat & Lezzet</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="city-suggestion-section">
+        <div class="section-title">
+            <span>ŞEHİR ÖNERİLERİ</span>
+            <h2 th:text="${country.name} + ' içinde nereden başlamalı?'">Fransa içinde nereden başlamalı?</h2>
+        </div>
+        <div class="city-suggestion-grid">
+            <article th:each="city : ${citySuggestions}">
+                <span th:text="${city.mood}">Sanat & lüks</span>
+                <h3 th:text="${city.name}">Paris</h3>
+                <p th:text="${city.description}">Şehir açıklaması</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="day-plan-section">
+        <div class="section-title">
+            <span>1 GÜNLÜK PLAN</span>
+            <h2 th:text="${country.name} + ' için bir gün nasıl geçer?'">Fransa için bir gün nasıl geçer?</h2>
+        </div>
+        <div class="day-plan-grid">
+            <article th:each="plan : ${dayPlan}">
+                <span th:text="${plan.time}">Sabah</span>
+                <h3 th:text="${plan.title}">Paris kafesinde yavaş başlangıç</h3>
+                <p th:text="${plan.description}">Plan açıklaması</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="detail-tabs-section" data-detail-tabs>
+        <div class="section-title">
+            <span>ÜLKE DENEYİMİ</span>
+            <h2 th:text="${country.name} + ' yaşam rehberi'">Fransa yaşam rehberi</h2>
+        </div>
+        <div class="detail-tabs" role="tablist" aria-label="Ülke detay başlıkları">
+            <button class="active" type="button" data-detail-tab="life">Yaşam</button>
+            <button type="button" data-detail-tab="food">Yemek</button>
+            <button type="button" data-detail-tab="home">Ev tarzı</button>
+            <button type="button" data-detail-tab="budget">Bütçe</button>
+        </div>
+        <div class="detail-tab-panels">
+            <article class="detail-tab-panel active" data-detail-panel="life">
+                <span>GÜNLÜK RİTİM</span>
+                <h3 th:text="${country.lifestyle}">Lüks & Kültür</h3>
+                <p th:text="${country.description}">Bu ülkenin yaşam ritmi sana uygun bir atmosfer sunar.</p>
+            </article>
+            <article class="detail-tab-panel" data-detail-panel="food">
+                <span>LEZZET DENEYİMİ</span>
+                <h3 th:text="${country.guideSections[0].title}">Meşhur Yemekler</h3>
+                <p th:text="${country.guideSections[0].description}">Ülkenin mutfak kültürünü keşfet.</p>
+            </article>
+            <article class="detail-tab-panel" data-detail-panel="home">
+                <span>YAŞAM ALANI</span>
+                <h3 th:text="${country.guideSections.size() > 2 ? country.guideSections[2].title : 'Ev ve yaşam stili'}">Ev ve yaşam stili</h3>
+                <p th:text="${country.name} + ' için öne çıkan yaşam alanları, ülkenin estetik ve konfor anlayışını yansıtır.'">Ev ve yaşam stili açıklaması</p>
+            </article>
+            <article class="detail-tab-panel" data-detail-panel="budget">
+                <span>PRATİK PLAN</span>
+                <h3 th:text="${country.currency} + ' ile planlama'">Euro ile planlama</h3>
+                <p th:text="${country.region} + ' bölgesindeki bu rota için konaklama, ulaşım ve günlük yaşam beklentilerini favorilerine ekleyerek daha sonra karşılaştırabilirsin.'">Bütçe bilgisi</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="detail-deep-section guide-section">
+        <div class="section-title">
+            <span th:text="${country.name} + ' REHBERİ'">FRANSA REHBERİ</span>
+            <h2 th:text="${country.name} + ' Rehberi'">Fransa Rehberi</h2>
+        </div>
+
+        <div class="guide-grid">
+            <a th:each="section : ${country.guideSections}" th:href="'#' + ${section.id}">
+                <img th:src="${section.image}" th:alt="${section.alt}">
+                <div>
+                    <h3 th:text="${section.title}">Meşhur Yemekler</h3>
+                    <p th:text="${section.description}">Açıklama</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="detail-gallery-section" th:each="section : ${country.guideSections}" th:id="${section.id}">
+        <div class="section-title">
+            <span th:text="${section.eyebrow}">LEZZET</span>
+            <h2 th:text="${section.title}">Meşhur Yemekler</h2>
+        </div>
+
+        <div class="mini-gallery">
+            <article th:each="item : ${section.items}">
+                <img th:src="${item.image}" th:alt="${item.title}">
+                <h3 th:text="${item.title}">Kruvasan</h3>
+                <p th:text="${item.description}">Açıklama</p>
+            </article>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+<header class="auth-brand">
+    <a class="logo" href="/" aria-label="UrbanAura ana sayfa">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+</header>
+
+<main class="auth-stage">
+    <section class="auth-card auth-card-login">
+        <a class="auth-close" href="/" aria-label="Giriş penceresini kapat">&times;</a>
+
+        <nav class="auth-tabs" aria-label="Hesap seçeneği">
+            <a class="active" href="/login" aria-current="page">Giriş Yap</a>
+            <a href="/register">Kayıt Ol</a>
+        </nav>
+
+        <div class="auth-card-header">
+            <span>URBANAURA</span>
+            <h1>Tekrar hoş geldin</h1>
+            <p>Dünyanın seçkin rotalarına kaldığın yerden devam et.</p>
+        </div>
+
+        <p class="auth-alert success" th:if="${success}" th:text="${success}">Başarılı</p>
+        <p class="auth-alert error" th:if="${error}" th:text="${error}">Giriş hatası</p>
+
+        <form class="auth-form" action="/login" method="post">
+            <label for="email">E-posta</label>
+            <input id="email" name="email" type="email" placeholder="ornek@mail.com" th:value="${email}" autocomplete="email" required>
+
+            <label for="password">Şifre</label>
+            <input id="password" name="password" type="password" placeholder="Şifreni gir" autocomplete="current-password" required>
+
+            <div class="form-row">
+                <label class="remember">
+                    <input type="checkbox" name="remember">
+                    Beni hatırla
+                </label>
+                <a href="/forgot-password">Şifremi unuttum</a>
+            </div>
+
+            <button class="auth-submit" type="submit">Giriş Yap</button>
+        </form>
+
+    </section>
+</main>
+
+</body>
+</html>

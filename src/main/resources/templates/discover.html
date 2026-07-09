@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keşfet - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/ui-effects.js" defer></script>
+</head>
+<body class="page-body discover-body">
+
+<header class="navbar page-navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/countries">Ülkeler</a>
+        <a href="/lifestyles">Yaşam Tarzları</a>
+        <a href="/discover" class="active">Keşfet</a>
+        <a href="/favorites">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions" th:if="${currentUser == null}">
+        <a class="login-btn" href="/login">Giriş Yap</a>
+        <a class="register-btn" href="/register">Kayıt Ol</a>
+    </div>
+    <div class="nav-actions" th:if="${currentUser != null}">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="register-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main class="discover-page">
+    <section th:class="'discover-hero ' + (${recommendedCountry != null} ? ${recommendedCountry.imageClass} : 'france')">
+        <div>
+            <span>SANA ÖZEL ÖNERİLER</span>
+            <h1 th:text="${recommendedCountry != null} ? ${recommendedCountry.name} + ' ile başlayan rotanı keşfet.' : 'Yaşam tarzına en uygun ülkeleri keşfet.'">Yaşam tarzına en uygun ülkeleri keşfet.</h1>
+            <p th:text="${recommendedCountry != null} ? 'Quiz sonucuna göre sana en yakın rota ' + ${recommendedCountry.lifestyle} + ' hissi taşıyor. Benzer ülkeleri ve kategorileri burada topladık.' : 'Lüks, kültür, doğa ve modern yaşam seçeneklerine göre UrbanAura’nın öne çıkardığı rotalara göz at.'">Lüks, kültür, doğa ve modern yaşam seçeneklerine göre UrbanAura'nın öne çıkardığı rotalara göz at.</p>
+            <a href="/lifestyles" th:text="${recommendedCountry != null} ? 'Quizi Yeniden Çöz' : 'Tarzını Seç'">Tarzını Seç</a>
+        </div>
+    </section>
+
+    <section class="recommendation-section">
+        <div class="section-title">
+            <span th:text="${recommendedCountry != null} ? 'QUIZ SONUCUNA GÖRE' : 'URBANAURA SEÇKİSİ'">URBANAURA SEÇKİSİ</span>
+            <h2 th:text="${recommendedCountry != null} ? 'Sana Yakın Rotalar' : 'Sana Özel Öneriler'">Sana Özel Öneriler</h2>
+        </div>
+
+        <div class="recommendation-grid">
+            <article th:each="country, stat : ${personalizedCountries}" th:class="'recommendation-card ' + ${country.imageClass}">
+                <div>
+                    <span th:text="${stat.index == 0 && recommendedCountry != null} ? 'En güçlü eşleşme' : ${country.lifestyle}">Öne çıkan</span>
+                    <h3 th:text="${country.name}">Fransa</h3>
+                    <p th:text="${country.description}">Moda, sanat ve zarafetle güçlü bir yaşam deneyimi.</p>
+                </div>
+                <a th:href="'/country/' + ${country.slug}">Detayları Gör</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="explore-section">
+        <div class="section-title">
+            <span>KATEGORİLER</span>
+            <h2>Keşfet</h2>
+        </div>
+
+        <div class="explore-grid">
+            <a class="explore-card" href="/countries?style=kultur">
+                <img src="/images/lifestyle-culture.png" alt="Sanat ve kültür">
+                <div>
+                    <h3>Sanat & Kültür</h3>
+                    <p>Tarihi, müzeleri ve mimarisi güçlü ülkeleri gör.</p>
+                </div>
+            </a>
+
+            <a class="explore-card" href="/countries?style=doga">
+                <img src="/images/lifestyle-nature.png" alt="Doğa ve huzur">
+                <div>
+                    <h3>Doğa & Huzur</h3>
+                    <p>Sakinlik, yeşil alan ve doğal güzellik arayanlara.</p>
+                </div>
+            </a>
+
+            <a class="explore-card" href="/countries?style=modern">
+                <img src="/images/modern-dynamic.png" alt="Modern ve dinamik">
+                <div>
+                    <h3>Modern & Dinamik</h3>
+                    <p>Teknoloji, enerji ve şehir ritmiyle öne çıkan ülkeler.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="spain-food-section" th:if="${foodSection != null}">
+        <div class="section-title">
+            <span th:text="${foodCountry.name} + ' LEZZETLERİ'">ÜLKE LEZZETLERİ</span>
+            <h2 th:text="${foodTitle}">Paella, Tapas ve Churros</h2>
+        </div>
+
+        <div class="spain-food-grid">
+            <article th:each="item, stat : ${foodSection.items}"
+                     th:class="${stat.index == 0} ? 'spain-food-card large' : 'spain-food-card'">
+                <img th:src="${item.image}" th:alt="${item.title}">
+                <div>
+                    <span th:text="${item.title}">Lezzet</span>
+                    <h3 th:text="${item.description}">Ülkenin öne çıkan lezzeti.</h3>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

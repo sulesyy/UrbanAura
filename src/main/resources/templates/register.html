@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+<header class="auth-brand">
+    <a class="logo" href="/" aria-label="UrbanAura ana sayfa">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+</header>
+
+<main class="auth-stage">
+    <section class="auth-card auth-card-register">
+        <a class="auth-close" href="/" aria-label="Kayıt penceresini kapat">&times;</a>
+
+        <nav class="auth-tabs" aria-label="Hesap seçeneği">
+            <a href="/login">Giriş Yap</a>
+            <a class="active" href="/register" aria-current="page">Kayıt Ol</a>
+        </nav>
+
+        <div class="auth-card-header">
+            <span>URBANAURA</span>
+            <h1>Yeni bir rota</h1>
+            <p>Zevklerine göre seçkin ülkeleri ve yaşam tarzlarını keşfet.</p>
+        </div>
+
+        <p class="auth-alert error" th:if="${error}" th:text="${error}">Kayıt hatası</p>
+
+        <form class="auth-form" action="/register" method="post">
+            <label for="fullName">Ad Soyad</label>
+            <input id="fullName" name="fullName" type="text" placeholder="Adın Soyadın" th:value="${fullName}" autocomplete="name" required>
+
+            <label for="email">E-posta</label>
+            <input id="email" name="email" type="email" placeholder="ornek@mail.com" th:value="${email}" autocomplete="email" required>
+
+            <label for="password">Şifre</label>
+            <input id="password" name="password" type="password" placeholder="En az 6 karakter" autocomplete="new-password" minlength="6" required>
+
+            <label for="style">Yaşam Tarzı</label>
+            <select id="style" name="style" required>
+                <option value="">Yaşam tarzı seç</option>
+                <option th:selected="${style == 'Lüks & Konforlu'}">Lüks & Konforlu</option>
+                <option th:selected="${style == 'Sanat & Kültür'}">Sanat & Kültür</option>
+                <option th:selected="${style == 'Doğa & Huzur'}">Doğa & Huzur</option>
+                <option th:selected="${style == 'Modern & Dinamik'}">Modern & Dinamik</option>
+                <option th:selected="${style == 'Geleneksel & Tarihi'}">Geleneksel & Tarihi</option>
+                <option th:selected="${style == 'Sade & Minimal'}">Sade & Minimal</option>
+            </select>
+
+            <label class="remember terms">
+                <input type="checkbox" name="terms" required>
+                UrbanAura kullanım koşullarını kabul ediyorum.
+            </label>
+
+            <button class="auth-submit" type="submit">Hesap Oluştur</button>
+        </form>
+
+    </section>
+</main>
+
+</body>
+</html>

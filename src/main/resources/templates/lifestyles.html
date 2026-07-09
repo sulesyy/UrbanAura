@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaşam Tarzları - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/country-actions.js" defer></script>
+    <script src="/js/lifestyle-quiz.js" defer></script>
+    <script src="/js/ui-effects.js" defer></script>
+</head>
+<body class="page-body quiz-body">
+
+<header class="navbar page-navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/countries">Ülkeler</a>
+        <a href="/lifestyles" class="active">Yaşam Tarzları</a>
+        <a href="/discover">Keşfet</a>
+        <a href="/favorites">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="register-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main class="lifestyles-page">
+    <section class="quiz-shell" data-quiz>
+        <a class="quiz-saved-match" th:if="${recommendedCountry != null}"
+           th:href="'/country/' + ${recommendedCountry.slug}">
+            Son eşleşmen: <strong th:text="${recommendedCountry.name}">Fransa</strong>
+            <span>Tekrar çözebilir veya önerini inceleyebilirsin.</span>
+        </a>
+        <div class="quiz-hero">
+            <span>PERSONAL DESTINATION MATCH</span>
+            <h1>Sana uygun ülkeyi bul</h1>
+            <p>Altı kısa seçimle yaşam ritmine ve hayalindeki atmosfere en çok uyan rotayı keşfet.</p>
+        </div>
+
+        <div class="quiz-header">
+            <div>
+                <span class="quiz-label">URBANAURA QUIZ</span>
+                <p class="quiz-step" data-quiz-step>Soru 1 / 6</p>
+            </div>
+            <div class="quiz-progress" aria-label="Quiz ilerleme durumu">
+                <span data-quiz-progress></span>
+            </div>
+        </div>
+
+        <div class="quiz-question" data-quiz-question aria-live="polite"></div>
+
+        <article class="quiz-result" data-quiz-result hidden>
+            <div class="quiz-result-image france" data-result-image></div>
+            <div class="quiz-result-copy">
+                <span>SANA EN UYGUN ROTA</span>
+                <h2 data-result-title>Fransa</h2>
+                <div class="quiz-profile-type" data-result-profile>Luxury Culture Seeker</div>
+                <p class="quiz-match-score" data-result-score>%92 eşleşme</p>
+                <p data-result-description></p>
+                <p class="quiz-personal-explanation" data-result-personal></p>
+                <ul class="quiz-result-reasons" data-result-reasons></ul>
+                <div class="quiz-alternatives">
+                    <span>Alternatiflerin</span>
+                    <p data-result-alternatives></p>
+                    <div class="quiz-alt-cards" data-result-alt-cards></div>
+                </div>
+                <div class="quiz-city-block">
+                    <span>ŞEHİR ÖNERİLERİ</span>
+                    <div class="quiz-city-grid" data-result-cities></div>
+                </div>
+                <div class="quiz-result-actions">
+                    <a class="quiz-primary-action" data-result-link href="/country/france">Ülkeyi Keşfet</a>
+                    <button class="quiz-secondary-action" type="button" data-result-favorite data-favorite-toggle="france">
+                        <span data-favorite-icon>♡</span>
+                        <span data-favorite-label>Favorilere Ekle</span>
+                    </button>
+                    <button class="quiz-secondary-action" type="button" data-quiz-restart>Tekrar Çöz</button>
+                </div>
+            </div>
+        </article>
+    </section>
+</main>
+
+</body>
+</html>

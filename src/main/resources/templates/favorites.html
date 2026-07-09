@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorilerim - UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/country-actions.js" defer></script>
+    <script src="/js/ui-effects.js" defer></script>
+</head>
+<body class="page-body favorites-body">
+
+<header class="navbar page-navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/countries">Ülkeler</a>
+        <a href="/lifestyles">Yaşam Tarzları</a>
+        <a href="/discover">Keşfet</a>
+        <a href="/favorites" class="active">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="login-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main class="favorites-page">
+    <section class="favorites-main">
+        <div class="page-heading">
+            <span>MY URBANAURA</span>
+            <h1>Favorilerim</h1>
+            <p>Kaydettiğin ülkeleri ve sana uygun yaşam tarzlarını burada görüntüle.</p>
+        </div>
+
+        <div class="favorite-collection-tabs" aria-label="Favori koleksiyonları" th:if="${!favoriteCountries.isEmpty()}">
+            <button type="button" class="is-active" data-favorite-filter="all">
+                <span>Tümü</span>
+                <strong data-favorite-filter-count="all">0</strong>
+            </button>
+            <button type="button" data-favorite-filter="dream">
+                <span>Yaşamak istediklerim</span>
+                <strong data-favorite-filter-count="dream">0</strong>
+            </button>
+            <button type="button" data-favorite-filter="holiday">
+                <span>Tatil rotalarım</span>
+                <strong data-favorite-filter-count="holiday">0</strong>
+            </button>
+            <button type="button" data-favorite-filter="culture">
+                <span>Kültür şehirleri</span>
+                <strong data-favorite-filter-count="culture">0</strong>
+            </button>
+            <button type="button" data-favorite-filter="luxury">
+                <span>Lüks yaşam</span>
+                <strong data-favorite-filter-count="luxury">0</strong>
+            </button>
+        </div>
+
+        <div class="favorite-grid" data-favorite-grid>
+            <article th:each="country : ${favoriteCountries}"
+                     th:class="'country-card ' + ${country.imageClass}"
+                     th:attr="data-favorite-card=${country.slug},data-favorite-card-collection=${favoriteCollections[country.slug] == null ? 'dream' : favoriteCollections[country.slug]}">
+                <button type="button" class="is-favorite" th:attr="data-favorite-toggle=${country.slug},aria-label='Favorilerden çıkar',aria-pressed=true">♥</button>
+                <div>
+                    <a th:href="'/country/' + ${country.slug}">
+                        <h2 th:text="${country.name}">Fransa</h2>
+                        <p th:text="${country.lifestyle}">Lüks & Kültür</p>
+                    </a>
+                    <label class="favorite-note">
+                        <span>Kişisel not</span>
+                        <textarea rows="2" th:attr="data-favorite-note=${country.slug}" placeholder="Bu ülke neden listende?" th:text="${favoriteNotes[country.slug]}"></textarea>
+                    </label>
+                    <label class="favorite-collection">
+                        <span>Koleksiyon</span>
+                        <select th:attr="data-favorite-collection=${country.slug}">
+                            <option value="dream" th:selected="${favoriteCollections[country.slug] == null || favoriteCollections[country.slug] == 'dream'}">Yaşamak istediklerim</option>
+                            <option value="holiday" th:selected="${favoriteCollections[country.slug] == 'holiday'}">Tatil rotalarım</option>
+                            <option value="culture" th:selected="${favoriteCollections[country.slug] == 'culture'}">Kültür şehirleri</option>
+                            <option value="luxury" th:selected="${favoriteCollections[country.slug] == 'luxury'}">Lüks yaşam</option>
+                        </select>
+                    </label>
+                </div>
+            </article>
+        </div>
+        <div class="favorite-empty premium-empty" data-favorites-filter-empty hidden>
+            <span>◇</span>
+            <h2>Bu koleksiyonda henüz ülke yok</h2>
+            <p>Favori kartındaki koleksiyon alanından ülkelerini bu listeye taşıyabilirsin.</p>
+        </div>
+        <div class="favorite-empty premium-empty" data-favorites-empty th:hidden="${!favoriteCountries.isEmpty()}">
+            <span>♡</span>
+            <h2>Henüz favori ülken yok</h2>
+            <p>Kalbine yakın ülkeleri kaydettiğinde burada premium bir liste olarak görünecek.</p>
+            <a href="/countries">Ülkeleri keşfet</a>
+        </div>
+    </section>
+
+    <aside class="profile-panel">
+        <div class="profile-avatar" th:text="${userInitials}">UA</div>
+        <h2 th:text="${currentUser.fullName()}">UrbanAura Kullanıcısı</h2>
+        <p th:text="${currentUser.email()}">kullanici@email.com</p>
+        <p class="profile-style" th:text="${currentUser.style()}">Yaşam tarzı</p>
+
+        <p class="auth-alert success" th:if="${profileSuccess}" th:text="${profileSuccess}">Profil güncellendi</p>
+        <p class="auth-alert error" th:if="${profileError}" th:text="${profileError}">Profil hatası</p>
+
+        <a class="profile-recommendation" th:if="${recommendedCountry != null}"
+           th:href="'/country/' + ${recommendedCountry.slug}">
+            <span>QUIZ EŞLEŞMEN</span>
+            <strong th:text="${recommendedCountry.name}">Fransa</strong>
+            <small th:text="${recommendedCountry.lifestyle}">Lüks & Kültür</small>
+        </a>
+
+        <div class="profile-stats">
+            <div>
+                <strong data-favorite-count th:text="${favoriteCount}">0</strong>
+                <span>Favori Ülke</span>
+            </div>
+            <div>
+                <strong th:text="${recommendedCountry != null} ? '1' : '0'">0</strong>
+                <span>Quiz Önerisi</span>
+            </div>
+        </div>
+
+        <form class="profile-form" action="/profile" method="post">
+            <label for="profileFullName">Ad Soyad</label>
+            <input id="profileFullName" name="fullName" type="text" th:value="${currentUser.fullName()}" required>
+
+            <label for="profileStyle">Yaşam Tarzı</label>
+            <select id="profileStyle" name="style" required>
+                <option th:each="styleOption : ${profileStyles}"
+                        th:value="${styleOption}"
+                        th:text="${styleOption}"
+                        th:selected="${styleOption == currentUser.style()}">Sanat & Kültür</option>
+            </select>
+
+            <button type="submit">Profili Güncelle</button>
+        </form>
+
+        <nav class="profile-menu">
+            <a href="#profileFullName">Profil Bilgileri</a>
+            <a href="/favorites">Favori Ülkelerim</a>
+            <a href="/lifestyles">Tercih Ettiğim Tarz</a>
+            <a href="#">Bildirimler</a>
+            <a href="/logout">Çıkış Yap</a>
+        </nav>
+    </aside>
+</main>
+
+</body>
+</html>

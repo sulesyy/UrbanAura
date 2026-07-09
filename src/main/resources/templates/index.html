@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanAura</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/ui-effects.js" defer></script>
+</head>
+<body class="home-page" th:classappend="${currentUser != null} ? ' is-authenticated-home' : ' is-guest-home'">
+
+<header class="navbar">
+    <a class="logo" href="/">
+        <img src="/images/urbanaura-logo.png" alt="UrbanAura">
+    </a>
+
+    <nav class="nav-links">
+        <a href="/" class="active">Ana Sayfa</a>
+        <a href="/countries">Ülkeler</a>
+        <a href="/lifestyles">Yaşam Tarzları</a>
+        <a href="/discover">Keşfet</a>
+        <a href="/favorites">Favorilerim</a>
+    </nav>
+
+    <div class="nav-actions" th:if="${currentUser == null}">
+        <a class="login-btn" href="/login">Giriş Yap</a>
+        <a class="register-btn" href="/register">Kayıt Ol</a>
+    </div>
+    <div class="nav-actions" th:if="${currentUser != null}">
+        <span class="quiz-welcome" th:text="${currentUser.fullName()}">Kullanıcı</span>
+        <a class="register-btn" href="/logout">Çıkış Yap</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-eyebrow">DÜNYA SENİ BEKLİYOR</span>
+            <h1>
+                Hayalindeki
+                <span>ülkeyi keşfet,</span>
+                <em>yaşam tarzını</em>
+                <em>belirle.</em>
+            </h1>
+
+            <p>
+                Dünyanın en özel ülkelerinde kendine uygun yaşam tarzını bul.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="/discover" class="btn primary"><span>✈</span> Keşfetmeye Başla</a>
+                <a href="/countries" class="btn secondary"><span>◎</span> Ülkeleri Gör</a>
+            </div>
+
+            <div class="home-personal-panel" th:if="${currentUser != null}">
+                <div>
+                    <span>HOŞ GELDİN</span>
+                    <strong th:text="${currentUser.fullName()}">Aylin Yılmaz</strong>
+                    <small th:text="${currentUser.style()}">Sanat & Kültür</small>
+                </div>
+                <a th:if="${recommendedCountry != null}" th:href="'/country/' + ${recommendedCountry.slug}">
+                    <span>ÖNERİN</span>
+                    <strong th:text="${recommendedCountry.name}">Fransa</strong>
+                    <small>Detayları gör</small>
+                </a>
+                <a th:if="${recommendedCountry == null}" href="/lifestyles">
+                    <span>ÖNERİN</span>
+                    <strong>Quiz hazır</strong>
+                    <small>Tarzını belirle</small>
+                </a>
+                <div>
+                    <span>FAVORİ</span>
+                    <strong th:text="${favoriteCount}">0</strong>
+                    <small>kayıtlı rota</small>
+                </div>
+                <div>
+                    <span>KİŞİSEL SKOR</span>
+                    <strong>85</strong>
+                    <small>Keşif Puanı</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-gallery" aria-label="Öne çıkan rotalar">
+            <a class="hero-tile" href="/country/france" aria-label="Paris rotalarını keşfet">
+                <img src="/images/paris-luxury-night.png" alt="Paris Eyfel Kulesi manzarası">
+                <span class="hero-tile-badge">🇫🇷 FRANSA</span>
+                <span class="hero-tile-heart">♡</span>
+                <div>
+                    <h2>Paris</h2>
+                    <p>Kültür & Sanat • Lüks Yaşam</p>
+                    <small>★ Yüksek Yaşam Kalitesi</small>
+                </div>
+            </a>
+            <a class="hero-tile" href="/country/greece" aria-label="Santorini rotalarını keşfet">
+                <img src="/images/greece-sunset-places.png" alt="Santorini gün batımı terası">
+                <span class="hero-tile-badge">🇬🇷 YUNANİSTAN</span>
+                <span class="hero-tile-heart">♡</span>
+                <div>
+                    <h2>Santorini</h2>
+                    <p>Sahil Yaşamı • Düşük Stres</p>
+                    <small>★ Rahat & Huzurlu</small>
+                </div>
+            </a>
+            <a class="hero-tile" href="/country/uae" aria-label="Dubai rotalarını keşfet">
+                <img src="/images/uae-burj-khalifa.png" alt="Dubai altın gün batımı manzarası">
+                <span class="hero-tile-badge">🇦🇪 BAE</span>
+                <span class="hero-tile-heart">♡</span>
+                <div>
+                    <h2>Dubai</h2>
+                    <p>Modern Yaşam • Vergi Avantajı</p>
+                    <small>★ Yüksek Gelir Potansiyeli</small>
+                </div>
+            </a>
+            <a class="hero-tile" href="/country/switzerland" aria-label="İsviçre rotalarını keşfet">
+                <img src="/images/switzerland-main.png" alt="İsviçre göl ve dağ manzarası">
+                <span class="hero-tile-badge">🇨🇭 İSVİÇRE</span>
+                <span class="hero-tile-heart">♡</span>
+                <div>
+                    <h2>İsviçre</h2>
+                    <p>Doğa & Huzur • Güvenli Yaşam</p>
+                    <small>★ Yüksek Güvenlik</small>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="feature-section" aria-label="UrbanAura özellikleri" th:if="${currentUser == null}">
+        <div class="feature-panel">
+            <article class="feature-card">
+                <span>♕</span>
+                <h3>En Güzel Ülkeler</h3>
+                <p>Dünyadan ilham veren ülkeleri keşfet.</p>
+            </article>
+
+            <article class="feature-card">
+                <span>✧</span>
+                <h3>Yaşam Tarzını Seç</h3>
+                <p>Sana en uygun yaşam tarzını belirle.</p>
+            </article>
+
+            <article class="feature-card">
+                <span>⚙</span>
+                <h3>Kişiselleştirilmiş Öneriler</h3>
+                <p>Sana özel önerileri gör ve keşfet.</p>
+            </article>
+
+            <article class="feature-card">
+                <span>♡</span>
+                <h3>Favorilerine Ekle</h3>
+                <p>Beğendiğin ülkeleri kaydet.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="home-next-section" th:if="${currentUser != null}">
+        <div class="section-title">
+            <span>SONRAKİ ADIM</span>
+            <h2>Bir sonraki keşfin</h2>
+        </div>
+        <a class="home-next-all" href="/discover">Tümünü Gör →</a>
+        <div class="home-next-grid">
+            <a href="/lifestyles">
+                <span>01</span>
+                <b>◉</b>
+                <div>
+                    <h3>Quizini Güncelle</h3>
+                    <p>Daha iyi öneriler için tercihlerini güncelle.</p>
+                    <i style="--progress: 60%"></i><small>60%</small>
+                </div>
+            </a>
+            <a href="/discover">
+                <span>02</span>
+                <b>▱</b>
+                <div>
+                    <h3>Önerilerini Keşfet</h3>
+                    <p>Sana özel ülkeleri keşfetmeye başla.</p>
+                    <i style="--progress: 40%"></i><small>40%</small>
+                </div>
+            </a>
+            <a href="/favorites">
+                <span>03</span>
+                <b>✈</b>
+                <div>
+                    <h3>Koleksiyonuna Dön</h3>
+                    <p>Favori ülkelerini kaydet ve rotanı oluştur.</p>
+                    <i style="--progress: 20%"></i><small>20%</small>
+                </div>
+            </a>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
